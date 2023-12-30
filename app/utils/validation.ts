@@ -35,4 +35,39 @@ export const validation = {
 
     return "";
   },
+  checkFullName: (fullName: string | undefined): string => {
+    if (!fullName) {
+      return i88n.auth.requiredFullName;
+    }
+
+    return "";
+  },
+  checkPhoneNumber: (phoneNumber: string | undefined): string => {
+    if (!phoneNumber) {
+      return i88n.auth.requiredPhoneNumber;
+    }
+
+    return "";
+  },
+  checkMemberId: (memberId: string | undefined): string => {
+    if (!memberId) {
+      return i88n.auth.requiredMemberId;
+    }
+
+    return "";
+  },
+  checkDateOfBirth: (dateOfBirth: string | undefined): string => {
+    if (!dateOfBirth) {
+      return i88n.auth.requiredDateOfBirth;
+    }
+
+    return "";
+  },
+  checkRole: (role: string | undefined): string => {
+    if (!role) {
+      return i88n.auth.requiredRole;
+    }
+
+    return "";
+  },
 };

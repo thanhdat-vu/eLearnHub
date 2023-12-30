@@ -4,9 +4,11 @@ import {
   AuthErrorCodes,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { auth } from "@/libs/firebase.lib";
+import { auth, db } from "@/libs/firebase.lib";
 import { FirebaseError } from "firebase/app";
 import { i88n } from "@/i18n";
+import { User } from "@/models/User";
+import { doc, setDoc } from "firebase/firestore";
 
 export interface CustomError {
   errorMessage: string;
@@ -80,14 +82,17 @@ export const authService = {
     }
   },
 
-  async signUp(authStore: any, email: string, password: string) {
+  async signUp(authStore: any, signUpInfo: User) {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
-        password
+        signUpInfo.email,
+        signUpInfo.password
       );
       const user = userCredential.user;
+      await setDoc(doc(db, "users", user.uid), {
+        ...signUpInfo,
+      });
       const authToken = await user.getIdToken();
       authStore.setAuthToken(authToken);
     } catch (error) {

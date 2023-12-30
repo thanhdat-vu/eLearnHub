@@ -1,5 +1,7 @@
-import { Button, Text } from "native-base";
 import {
+  Button,
+  Text,
+  View,
   ScrollView,
   Box,
   Heading,
@@ -10,25 +12,24 @@ import {
   Pressable,
   Icon,
   WarningOutlineIcon,
+  Select,
 } from "native-base";
 import { useState } from "react";
 import { Link } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { i88n } from "@/i18n";
-import { SCREENS } from "@/constants";
+import { ROLES, SCREENS } from "@/constants";
 import { validation } from "@/utils/validation";
 import { CustomError, authService } from "@/services/auth.service";
 import { useStores } from "@/stores";
+import { User } from "@/models/User";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-interface Form {
-  email: string;
-  password: string;
+interface Form extends User {
   repeatPassword: string;
 }
 
-interface FormError {
-  email: string;
-  password: string;
+interface FormError extends User {
   repeatPassword: string;
   default: string;
 }
@@ -40,16 +41,27 @@ export const AuthForm = ({ isSignUp = false }) => {
     email: "",
     password: "",
     repeatPassword: "",
+    fullName: "",
+    phoneNumber: "",
+    memberId: "",
+    role: "",
+    dateOfBirth: "",
   });
 
   const [formError, setFormError] = useState<FormError>({
     email: "",
     password: "",
     repeatPassword: "",
+    fullName: "",
+    phoneNumber: "",
+    memberId: "",
+    role: "",
+    dateOfBirth: "",
     default: "",
   });
 
   const [loading, setLoading] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleSignIn = async () => {
     const currentFormError: FormError = {
@@ -80,28 +92,37 @@ export const AuthForm = ({ isSignUp = false }) => {
 
   const handleSignUp = async () => {
     const currentFormError: FormError = {
-      email: "",
-      password: "",
-      repeatPassword: "",
+      email: validation.checkEmail(form.email),
+      password: validation.checkPassword(form.password),
+      repeatPassword: validation.checkRepeatPassword(
+        form.password,
+        form.repeatPassword
+      ),
+      fullName: validation.checkFullName(form.fullName),
+      phoneNumber: validation.checkPhoneNumber(form.phoneNumber),
+      memberId: validation.checkMemberId(form.memberId),
+      role: validation.checkRole(form.role),
+      dateOfBirth: validation.checkDateOfBirth(form.dateOfBirth),
       default: "",
     };
-    currentFormError.email = validation.checkEmail(form.email);
-    currentFormError.password = validation.checkPassword(form.password);
-    currentFormError.repeatPassword = validation.checkRepeatPassword(
-      form.password,
-      form.repeatPassword
-    );
-    if (
-      currentFormError.email ||
-      currentFormError.password ||
-      currentFormError.repeatPassword
-    ) {
-      setFormError(currentFormError);
-      return;
+    for (const key in currentFormError) {
+      if (currentFormError[key as keyof FormError]) {
+        setFormError(currentFormError);
+        return;
+      }
     }
     try {
       setLoading(true);
-      await authService.signUp(authStore, form.email, form.password);
+      const signUpInfo: User = {
+        email: form.email,
+        password: form.password,
+        fullName: form.fullName,
+        phoneNumber: form.phoneNumber,
+        memberId: form.memberId,
+        role: form.role,
+        dateOfBirth: form.dateOfBirth,
+      };
+      await authService.signUp(authStore, signUpInfo);
     } catch (error) {
       const customError = error as CustomError;
       setFormError({
@@ -114,98 +135,232 @@ export const AuthForm = ({ isSignUp = false }) => {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      background="white"
-    >
-      <Box px="5" w="full">
-        <Heading size="lg" fontWeight="600" color="coolGray.800">
-          {i88n.auth.heading}
-        </Heading>
-        <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-          {isSignUp ? i88n.auth.signUpSubHeading : i88n.auth.signInSubHeading}
-        </Heading>
+    <View flex={1}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        background="white"
+      >
+        <Box px="5" py="20" w="full">
+          <Heading size="lg" fontWeight="600" color="coolGray.800">
+            {i88n.auth.heading}
+          </Heading>
+          <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
+            {isSignUp ? i88n.auth.signUpSubHeading : i88n.auth.signInSubHeading}
+          </Heading>
 
-        <Column mt="5" space={3}>
-          <FormControl isRequired isInvalid={!!formError.email}>
-            <FormControl.Label>{i88n.form.email}</FormControl.Label>
-            <Input
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.nativeEvent.text })}
-            />
-            <FormControl.ErrorMessage
-              leftIcon={<WarningOutlineIcon size="xs" />}
-            >
-              {formError.email}
-            </FormControl.ErrorMessage>
-          </FormControl>
+          <Column mt="5" space={3}>
+            <FormControl isRequired isInvalid={!!formError.email}>
+              <FormControl.Label>{i88n.form.email}</FormControl.Label>
+              <Input
+                value={form.email}
+                onChange={(e) =>
+                  setForm({ ...form, email: e.nativeEvent.text })
+                }
+              />
+              <FormControl.ErrorMessage
+                leftIcon={<WarningOutlineIcon size="xs" />}
+              >
+                {formError.email}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-          <PasswordInput
-            isInvalid={!!formError.password}
-            label={i88n.form.password}
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.nativeEvent.text })}
-            errorMessage={formError.password}
-          />
-
-          {isSignUp && (
             <PasswordInput
-              isInvalid={!!formError.repeatPassword}
-              label={i88n.auth.repeatPassword}
-              value={form.repeatPassword}
+              isInvalid={!!formError.password}
+              label={i88n.form.password}
+              value={form.password}
               onChange={(e) =>
-                setForm({ ...form, repeatPassword: e.nativeEvent.text })
+                setForm({ ...form, password: e.nativeEvent.text })
               }
-              errorMessage={formError.repeatPassword}
+              errorMessage={formError.password}
             />
-          )}
 
-          {!isSignUp && (
-            <Text
-              color="primary.500"
-              fontWeight="medium"
-              fontSize="sm"
-              alignSelf="flex-end"
-            >
-              <Link to={`/${SCREENS.RESET_PASSWORD}`}>
-                {i88n.auth.forgotPassword}
-              </Link>
-            </Text>
-          )}
+            {isSignUp && (
+              <>
+                <PasswordInput
+                  isInvalid={!!formError.repeatPassword}
+                  label={i88n.auth.repeatPassword}
+                  value={form.repeatPassword}
+                  onChange={(e) =>
+                    setForm({ ...form, repeatPassword: e.nativeEvent.text })
+                  }
+                  errorMessage={formError.repeatPassword}
+                />
 
-          <FormControl isInvalid={!!formError.default}>
-            <Button
-              mt="2"
-              colorScheme="primary"
-              isLoading={loading}
-              onPress={isSignUp ? handleSignUp : handleSignIn}
-            >
-              {isSignUp ? i88n.auth.signUp : i88n.auth.signIn}
-            </Button>
-            <FormControl.ErrorMessage
-              leftIcon={<WarningOutlineIcon size="xs" />}
-            >
-              {formError.default}
-            </FormControl.ErrorMessage>
-          </FormControl>
+                <FormControl isRequired isInvalid={!!formError.fullName}>
+                  <FormControl.Label>{i88n.form.fullName}</FormControl.Label>
+                  <Input
+                    value={form.fullName}
+                    onChange={(e) =>
+                      setForm({ ...form, fullName: e.nativeEvent.text })
+                    }
+                  />
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}
+                  >
+                    {formError.fullName}
+                  </FormControl.ErrorMessage>
+                </FormControl>
 
-          <Row mt="8" justifyContent="center">
-            <Text fontSize="sm" color="coolGray.600">
-              {isSignUp ? i88n.auth.haveAccount : i88n.auth.haveNoAccount}{" "}
-            </Text>
-            <Text color="primary.500" fontWeight="medium" fontSize="sm">
-              <Link to={`/${isSignUp ? SCREENS.SIGN_IN : SCREENS.SIGN_UP}`}>
-                {isSignUp ? i88n.auth.signIn : i88n.auth.signUp}
-              </Link>
-            </Text>
-          </Row>
-        </Column>
-      </Box>
-    </ScrollView>
+                <FormControl isRequired isInvalid={!!formError.phoneNumber}>
+                  <FormControl.Label>{i88n.form.phoneNumber}</FormControl.Label>
+                  <Input
+                    keyboardType="phone-pad"
+                    value={form.phoneNumber}
+                    onChange={(e) =>
+                      setForm({ ...form, phoneNumber: e.nativeEvent.text })
+                    }
+                  />
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}
+                  >
+                    {formError.phoneNumber}
+                  </FormControl.ErrorMessage>
+                </FormControl>
+
+                <FormControl isRequired isInvalid={!!formError.memberId}>
+                  <FormControl.Label>{i88n.form.memberId}</FormControl.Label>
+                  <Input
+                    keyboardType="number-pad"
+                    value={form.memberId}
+                    onChange={(e) =>
+                      setForm({ ...form, memberId: e.nativeEvent.text })
+                    }
+                  />
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}
+                  >
+                    {formError.memberId}
+                  </FormControl.ErrorMessage>
+                </FormControl>
+
+                <FormControl isRequired isReadOnly isInvalid={!!formError.role}>
+                  <FormControl.Label>{i88n.form.role}</FormControl.Label>
+                  <Select
+                    onValueChange={(itemValue) =>
+                      setForm({ ...form, role: itemValue })
+                    }
+                    accessibilityLabel={i88n.form.chooseRole}
+                    placeholder={i88n.form.chooseRole}
+                    _selectedItem={{
+                      bg: "teal.600",
+                      endIcon: (
+                        <Icon
+                          as={<MaterialCommunityIcons name="check" />}
+                          size="sm"
+                        />
+                      ),
+                    }}
+                    dropdownIcon={
+                      <Icon
+                        as={MaterialCommunityIcons}
+                        name="menu-down"
+                        size="lg"
+                        mr="1"
+                      />
+                    }
+                  >
+                    {ROLES.map((role) => (
+                      <Select.Item
+                        key={role.value}
+                        label={role.label}
+                        value={role.value}
+                      />
+                    ))}
+                  </Select>
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}
+                  >
+                    {formError.role}
+                  </FormControl.ErrorMessage>
+                </FormControl>
+
+                <FormControl isRequired isInvalid={!!formError.dateOfBirth}>
+                  <FormControl.Label>{i88n.form.dateOfBirth}</FormControl.Label>
+                  <Button
+                    leftIcon={
+                      <Icon
+                        as={<MaterialCommunityIcons name="calendar" />}
+                        size="sm"
+                      />
+                    }
+                    colorScheme="primary"
+                    onPress={() => setShowDatePicker(true)}
+                    variant="outline"
+                  >
+                    {form.dateOfBirth || i88n.form.chooseDateOfBirth}
+                  </Button>
+                  {showDatePicker && (
+                    <DateTimePicker
+                      value={new Date()}
+                      mode="date"
+                      display="spinner"
+                      onChange={(e, selectedDate) => {
+                        setShowDatePicker(false);
+                        setForm({
+                          ...form,
+                          dateOfBirth: selectedDate
+                            ?.toISOString()
+                            .split("T")[0],
+                        });
+                      }}
+                    />
+                  )}
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}
+                  >
+                    {formError.dateOfBirth}
+                  </FormControl.ErrorMessage>
+                </FormControl>
+              </>
+            )}
+
+            {!isSignUp && (
+              <Text
+                color="primary.500"
+                fontWeight="medium"
+                fontSize="sm"
+                alignSelf="flex-end"
+              >
+                <Link to={`/${SCREENS.RESET_PASSWORD}`}>
+                  {i88n.auth.forgotPassword}
+                </Link>
+              </Text>
+            )}
+
+            <FormControl isInvalid={!!formError.default}>
+              <Button
+                mt="2"
+                colorScheme="primary"
+                isLoading={loading}
+                onPress={isSignUp ? handleSignUp : handleSignIn}
+              >
+                {isSignUp ? i88n.auth.signUp : i88n.auth.signIn}
+              </Button>
+              <FormControl.ErrorMessage
+                leftIcon={<WarningOutlineIcon size="xs" />}
+              >
+                {formError.default}
+              </FormControl.ErrorMessage>
+            </FormControl>
+
+            <Row mt="8" justifyContent="center">
+              <Text fontSize="sm" color="coolGray.600">
+                {isSignUp ? i88n.auth.haveAccount : i88n.auth.haveNoAccount}{" "}
+              </Text>
+              <Text color="primary.500" fontWeight="medium" fontSize="sm">
+                <Link to={`/${isSignUp ? SCREENS.SIGN_IN : SCREENS.SIGN_UP}`}>
+                  {isSignUp ? i88n.auth.signIn : i88n.auth.signUp}
+                </Link>
+              </Text>
+            </Row>
+          </Column>
+        </Box>
+      </ScrollView>
+    </View>
   );
 };
 

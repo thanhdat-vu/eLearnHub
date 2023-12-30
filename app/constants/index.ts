@@ -7,3 +7,18 @@ export const SCREENS = {
   NOTIFICATIONS: "Notifications",
   SETTINGS: "Settings",
 };
+
+export const ROLES = [
+  {
+    label: "Người dạy",
+    value: "TEACHER",
+  },
+  {
+    label: "Người học",
+    value: "LEARNER",
+  },
+  {
+    label: "Trợ giảng",
+    value: "ASSISTANT",
+  },
+];
