@@ -263,11 +263,11 @@ export const AuthForm = ({ isSignUp = false }) => {
                       />
                     }
                   >
-                    {ROLES.map((role) => (
+                    {Object.entries(ROLES).map(([key, value]) => (
                       <Select.Item
-                        key={role.value}
-                        label={role.label}
-                        value={role.value}
+                        key={key}
+                        label={i88n.roles[value as keyof typeof i88n.roles]}
+                        value={key}
                       />
                     ))}
                   </Select>

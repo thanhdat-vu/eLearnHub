@@ -3,8 +3,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { i88n } from "@/i18n";
 import { authService } from "@/services/auth.service";
 import { useStores } from "@/stores";
+import { SCREENS } from "@/constants";
+import { useNavigation } from "@react-navigation/native";
 
 export const SettingScreen = () => {
+  const navigation = useNavigation();
+
   const { authStore } = useStores();
 
   const handleSignOut = () => {
@@ -12,6 +16,13 @@ export const SettingScreen = () => {
   };
 
   const settingOptions = [
+    {
+      id: 0,
+      iconName: "account",
+      text: i88n.settings.account,
+      // @ts-ignore
+      onPress: () => navigation.navigate(SCREENS.ACCOUNT),
+    },
     {
       id: 1,
       iconName: "logout",

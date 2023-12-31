@@ -6,19 +6,11 @@ export const SCREENS = {
   COLLECTION: "Collection",
   NOTIFICATIONS: "Notifications",
   SETTINGS: "Settings",
+  ACCOUNT: "Account",
 };
 
-export const ROLES = [
-  {
-    label: "Người dạy",
-    value: "TEACHER",
-  },
-  {
-    label: "Người học",
-    value: "LEARNER",
-  },
-  {
-    label: "Trợ giảng",
-    value: "ASSISTANT",
-  },
-];
+export const ROLES = {
+  TEACHER: "teacher",
+  LEARNER: "learner",
+  ASSISTANT: "assistant",
+};

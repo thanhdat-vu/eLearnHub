@@ -4,25 +4,25 @@ import { User } from "./UserStore";
 export const AuthStore = types
   .model({
     authToken: types.string,
-    currentUser: types.maybe(types.frozen<User>()),
+    userId: types.maybe(types.string),
   })
   .views((store) => ({
     get isAuthenticated() {
       return !!store.authToken;
     },
-    get getUser() {
-      return store.currentUser;
+    get getUserId() {
+      return store.userId;
     },
   }))
   .actions((store) => ({
     setAuthToken(token: string) {
       store.authToken = token;
     },
-    setCurrentUser(user: User) {
-      store.currentUser = user;
+    setUserId(userId: string) {
+      store.userId = userId;
     },
     signOut() {
       store.authToken = "";
-      store.currentUser = undefined;
+      store.userId = undefined;
     },
   }));

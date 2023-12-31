@@ -75,6 +75,7 @@ export const authService = {
       const user = userCredential.user;
       const authToken = await user.getIdToken();
       authStore.setAuthToken(authToken);
+      authStore.setUserId(user.uid);
     } catch (error) {
       const errorCode = (error as FirebaseError).code;
       const customError = authService.getFirebaseErrorMessages(errorCode);
@@ -95,6 +96,7 @@ export const authService = {
       });
       const authToken = await user.getIdToken();
       authStore.setAuthToken(authToken);
+      authStore.setUserId(user.uid);
     } catch (error) {
       const errorCode = (error as FirebaseError).code;
       const customError = authService.getFirebaseErrorMessages(errorCode);

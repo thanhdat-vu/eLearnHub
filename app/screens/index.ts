@@ -6,3 +6,5 @@ export * from "./HomeScreen";
 export * from "./CollectionScreen";
 export * from "./NotificationScreen";
 export * from "./SettingScreen";
+
+export * from "./AccountScreen";

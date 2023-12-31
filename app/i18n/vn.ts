@@ -1,6 +1,3 @@
-import { collection } from "firebase/firestore";
-import { set } from "mobx";
-
 export const vn = {
   auth: {
     heading: "Chào mừng bạn! 👋",
@@ -57,5 +54,14 @@ export const vn = {
   },
   settings: {
     signOut: "Đăng xuất",
+    account: "Tài khoản",
+  },
+  account: {
+    personalInfo: "Thông tin cá nhân",
+  },
+  roles: {
+    teacher: "Giảng viên",
+    learner: "Học viên",
+    assistant: "Trợ giảng",
   },
 };
