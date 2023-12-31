@@ -23,35 +23,62 @@ export const AccountScreen = () => {
         <Heading fontSize="md" fontWeight="bold">
           {i88n.account.personalInfo}
         </Heading>
-        <Text>
-          {i88n.form.fullName}: {userInfo?.fullName}
-        </Text>
-        <Text>
-          {i88n.form.memberId}: {userInfo?.memberId}
-        </Text>
-        <Text>
-          {i88n.form.role}:{" "}
-          {userInfo && userInfo.role
-            ? i88n.roles[userInfo.role.toLowerCase() as keyof typeof i88n.roles]
-            : ""}
-        </Text>
-        <Text>
-          {i88n.form.dateOfBirth}: {userInfo?.dateOfBirth}
-        </Text>
-        <Row>
-          <Text>{i88n.form.email}: </Text>
-          <Link href={`mailto:${userInfo?.email}`}>
-            <Text color="primary.500">{userInfo?.email}</Text>
-          </Link>
-        </Row>
-        {/* phone to */}
-        <Row>
-          <Text>{i88n.form.phoneNumber}: </Text>
-          <Link href={`tel:${userInfo?.phoneNumber}`}>
-            <Text color="primary.500">{userInfo?.phoneNumber}</Text>
-          </Link>
-        </Row>
+        <AccountInfoItem
+          label={i88n.form.fullName}
+          value={userInfo?.fullName}
+        />
+        <AccountInfoItem
+          label={i88n.form.memberId}
+          value={userInfo?.memberId}
+        />
+        <AccountInfoItem
+          label={i88n.form.role}
+          value={
+            userInfo && userInfo.role
+              ? i88n.roles[
+                  userInfo.role.toLowerCase() as keyof typeof i88n.roles
+                ]
+              : ""
+          }
+        />
+        <AccountInfoItem
+          label={i88n.form.dateOfBirth}
+          value={userInfo?.dateOfBirth}
+        />
+        <AccountInfoItem
+          label={i88n.form.email}
+          value={userInfo?.email}
+          linkTo={`mailto:${userInfo?.email}`}
+        />
+        <AccountInfoItem
+          label={i88n.form.phoneNumber}
+          value={userInfo?.phoneNumber}
+          linkTo={`tel:${userInfo?.phoneNumber}`}
+        />
       </Column>
     </ScrollView>
+  );
+};
+
+export const AccountInfoItem = ({
+  label,
+  value,
+  linkTo,
+}: {
+  label: string;
+  value: string | undefined;
+  linkTo?: string;
+}) => {
+  return (
+    <Row justifyContent="space-between">
+      <Text color="coolGray.500">{label}: </Text>
+      {linkTo ? (
+        <Link href={`mailto:${value}`}>
+          <Text color="primary.500">{value}</Text>
+        </Link>
+      ) : (
+        <Text>{value}</Text>
+      )}
+    </Row>
   );
 };
