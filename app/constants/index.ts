@@ -7,6 +7,7 @@ export const SCREENS = {
   NOTIFICATIONS: "Notifications",
   SETTINGS: "Settings",
   ACCOUNT: "Account",
+  CREATE_CLASS: "CreateClass",
 };
 
 export const ROLES = {

@@ -8,3 +8,4 @@ export * from "./NotificationScreen";
 export * from "./SettingScreen";
 
 export * from "./AccountScreen";
+export * from "./CreateClassScreen";

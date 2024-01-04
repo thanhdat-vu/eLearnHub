@@ -73,7 +73,7 @@ export const AccountInfoItem = ({
     <Row justifyContent="space-between">
       <Text color="coolGray.500">{label}: </Text>
       {linkTo ? (
-        <Link href={`mailto:${value}`}>
+        <Link href={linkTo}>
           <Text color="primary.500">{value}</Text>
         </Link>
       ) : (

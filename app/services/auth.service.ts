@@ -92,6 +92,7 @@ export const authService = {
       );
       const user = userCredential.user;
       await setDoc(doc(db, "users", user.uid), {
+        id: user.uid,
         ...signUpInfo,
       });
       const authToken = await user.getIdToken();

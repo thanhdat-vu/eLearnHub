@@ -70,4 +70,11 @@ export const validation = {
 
     return "";
   },
+  checkRequired: (value: string | undefined): string => {
+    if (!value) {
+      return i88n.form.fieldRequired;
+    }
+
+    return "";
+  },
 };

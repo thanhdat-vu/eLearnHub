@@ -23,7 +23,7 @@ import { validation } from "@/utils/validation";
 import { CustomError, authService } from "@/services/auth.service";
 import { useStores } from "@/stores";
 import { User } from "@/models/User";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { DateTimeInput } from "./DateTimeInput";
 
 interface Form extends User {
   repeatPassword: string;
@@ -267,7 +267,7 @@ export const AuthForm = ({ isSignUp = false }) => {
                       <Select.Item
                         key={key}
                         label={i88n.roles[value as keyof typeof i88n.roles]}
-                        value={key}
+                        value={value}
                       />
                     ))}
                   </Select>
@@ -278,43 +278,15 @@ export const AuthForm = ({ isSignUp = false }) => {
                   </FormControl.ErrorMessage>
                 </FormControl>
 
-                <FormControl isRequired isInvalid={!!formError.dateOfBirth}>
-                  <FormControl.Label>{i88n.form.dateOfBirth}</FormControl.Label>
-                  <Button
-                    leftIcon={
-                      <Icon
-                        as={<MaterialCommunityIcons name="calendar" />}
-                        size="sm"
-                      />
-                    }
-                    colorScheme="primary"
-                    onPress={() => setShowDatePicker(true)}
-                    variant="outline"
-                  >
-                    {form.dateOfBirth || i88n.form.chooseDateOfBirth}
-                  </Button>
-                  {showDatePicker && (
-                    <DateTimePicker
-                      value={new Date()}
-                      mode="date"
-                      display="spinner"
-                      onChange={(e, selectedDate) => {
-                        setShowDatePicker(false);
-                        setForm({
-                          ...form,
-                          dateOfBirth: selectedDate
-                            ?.toISOString()
-                            .split("T")[0],
-                        });
-                      }}
-                    />
-                  )}
-                  <FormControl.ErrorMessage
-                    leftIcon={<WarningOutlineIcon size="xs" />}
-                  >
-                    {formError.dateOfBirth}
-                  </FormControl.ErrorMessage>
-                </FormControl>
+                <DateTimeInput
+                  label={i88n.form.dateOfBirth}
+                  isInvalid={!!formError.dateOfBirth}
+                  errorMessage={formError.dateOfBirth}
+                  value={form.dateOfBirth || i88n.form.chooseDateOfBirth}
+                  onChangeDate={(dateOfBirth) =>
+                    setForm({ ...form, dateOfBirth })
+                  }
+                />
               </>
             )}
 
