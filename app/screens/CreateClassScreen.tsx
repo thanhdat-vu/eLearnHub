@@ -15,7 +15,7 @@ import {
 } from "native-base";
 import { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { User } from "@/models/User";
+import { User } from "@/stores/UserStore";
 import { userService } from "@/services/user.service";
 import { ROLES } from "@/constants";
 import { classService } from "@/services/class.service";

@@ -7,8 +7,10 @@ import {
 import { auth, db } from "@/libs/firebase.lib";
 import { FirebaseError } from "firebase/app";
 import { i88n } from "@/i18n";
-import { User } from "@/models/User";
+import { User } from "@/stores/UserStore";
 import { doc, setDoc } from "firebase/firestore";
+import { AuthStore } from "@/stores/AuthStore";
+import { userService } from "./user.service";
 
 export interface CustomError {
   errorMessage: string;
@@ -65,7 +67,7 @@ export const authService = {
     }
   },
 
-  async signIn(authStore: any, email: string, password: string) {
+  async signIn(authStore: AuthStore, email: string, password: string) {
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -75,7 +77,8 @@ export const authService = {
       const user = userCredential.user;
       const authToken = await user.getIdToken();
       authStore.setAuthToken(authToken);
-      authStore.setUserId(user.uid);
+      const userInfo = await userService.getUser(user.uid);
+      authStore.setUser(userInfo);
     } catch (error) {
       const errorCode = (error as FirebaseError).code;
       const customError = authService.getFirebaseErrorMessages(errorCode);
@@ -83,7 +86,7 @@ export const authService = {
     }
   },
 
-  async signUp(authStore: any, signUpInfo: User) {
+  async signUp(authStore: AuthStore, signUpInfo: User) {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -91,13 +94,11 @@ export const authService = {
         signUpInfo.password
       );
       const user = userCredential.user;
-      await setDoc(doc(db, "users", user.uid), {
-        id: user.uid,
-        ...signUpInfo,
-      });
+      await setDoc(doc(db, "users", user.uid), signUpInfo);
       const authToken = await user.getIdToken();
       authStore.setAuthToken(authToken);
-      authStore.setUserId(user.uid);
+      const userInfo = await userService.getUser(user.uid);
+      authStore.setUser({ ...userInfo, id: user.uid });
     } catch (error) {
       const errorCode = (error as FirebaseError).code;
       const customError = authService.getFirebaseErrorMessages(errorCode);

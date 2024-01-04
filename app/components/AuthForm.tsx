@@ -22,7 +22,7 @@ import { ROLES, SCREENS } from "@/constants";
 import { validation } from "@/utils/validation";
 import { CustomError, authService } from "@/services/auth.service";
 import { useStores } from "@/stores";
-import { User } from "@/models/User";
+import { User } from "@/stores/UserStore";
 import { DateTimeInput } from "./DateTimeInput";
 
 interface Form extends User {
@@ -37,39 +37,14 @@ interface FormError extends User {
 export const AuthForm = ({ isSignUp = false }) => {
   const { authStore } = useStores();
 
-  const [form, setForm] = useState<Form>({
-    email: "",
-    password: "",
-    repeatPassword: "",
-    fullName: "",
-    phoneNumber: "",
-    memberId: "",
-    role: "",
-    dateOfBirth: "",
-  });
+  const [form, setForm] = useState<Form>({} as Form);
 
-  const [formError, setFormError] = useState<FormError>({
-    email: "",
-    password: "",
-    repeatPassword: "",
-    fullName: "",
-    phoneNumber: "",
-    memberId: "",
-    role: "",
-    dateOfBirth: "",
-    default: "",
-  });
+  const [formError, setFormError] = useState<FormError>({} as FormError);
 
   const [loading, setLoading] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleSignIn = async () => {
-    const currentFormError: FormError = {
-      email: "",
-      password: "",
-      repeatPassword: "",
-      default: "",
-    };
+    const currentFormError: FormError = {} as FormError;
     currentFormError.email = validation.checkEmail(form.email);
     currentFormError.password = validation.checkPassword(form.password);
     if (currentFormError.email || currentFormError.password) {
@@ -92,6 +67,7 @@ export const AuthForm = ({ isSignUp = false }) => {
 
   const handleSignUp = async () => {
     const currentFormError: FormError = {
+      id: "",
       email: validation.checkEmail(form.email),
       password: validation.checkPassword(form.password),
       repeatPassword: validation.checkRepeatPassword(
@@ -114,6 +90,7 @@ export const AuthForm = ({ isSignUp = false }) => {
     try {
       setLoading(true);
       const signUpInfo: User = {
+        id: "",
         email: form.email,
         password: form.password,
         fullName: form.fullName,
@@ -122,6 +99,7 @@ export const AuthForm = ({ isSignUp = false }) => {
         role: form.role,
         dateOfBirth: form.dateOfBirth,
       };
+      // @ts-ignore
       await authService.signUp(authStore, signUpInfo);
     } catch (error) {
       const customError = error as CustomError;

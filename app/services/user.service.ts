@@ -1,4 +1,5 @@
 import { db } from "@/libs/firebase.lib";
+import { User } from "@/stores/UserStore";
 import {
   collection,
   doc,
@@ -12,7 +13,7 @@ export const userService = {
   getUser: async (userId: string) => {
     const userDoc = doc(db, "users", userId);
     const user = await getDoc(userDoc);
-    return user.data();
+    return user.data() as User;
   },
 
   getUserByRole: async (role: string) => {
