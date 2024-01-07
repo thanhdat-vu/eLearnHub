@@ -61,6 +61,7 @@ export const vn = {
     cancel: "Hủy",
     confirm: "Xác nhận",
     backToHome: "Quay lại trang chủ",
+    save: "Lưu",
   },
   settings: {
     signOut: "Đăng xuất",
@@ -93,6 +94,13 @@ export const vn = {
     chooseEndTime: "Chọn giờ kết thúc",
     chooseAssistant: "Chọn trợ giảng",
     createSuccess: "Tạo lớp học thành công!",
+    addResource: "Thêm tài liệu",
+    addAssignment: "Thêm bài tập",
+  },
+  manageResource: {
+    name: "Tên tài liệu",
+    description: "Mô tả",
+    url: "Đường dẫn",
   },
   home: {
     classList: "Danh sách lớp học",

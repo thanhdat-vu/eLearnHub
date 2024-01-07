@@ -15,7 +15,7 @@ export const classService = {
       const querySnapshot = await getDocs(collection(db, "classes"));
       const classes: Class[] = [];
       querySnapshot.forEach((doc) => {
-        classes.push(doc.data() as Class);
+        classes.push({ ...(doc.data() as Class), id: doc.id });
       });
       return classes;
     } catch (error) {
@@ -31,7 +31,7 @@ export const classService = {
       const querySnapshot = await getDocs(q);
       const classes: Class[] = [];
       querySnapshot.forEach((doc) => {
-        classes.push(doc.data() as Class);
+        classes.push({ ...(doc.data() as Class), id: doc.id });
       });
       return classes;
     } catch (error) {
@@ -47,7 +47,7 @@ export const classService = {
       const querySnapshot = await getDocs(q);
       const classes: Class[] = [];
       querySnapshot.forEach((doc) => {
-        classes.push(doc.data() as Class);
+        classes.push({ ...(doc.data() as Class), id: doc.id });
       });
       return classes;
     } catch (error) {
