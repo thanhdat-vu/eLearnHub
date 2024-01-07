@@ -42,6 +42,8 @@ export const vn = {
     dateOfBirth: "Ngày sinh",
     chooseDateOfBirth: "Chọn ngày sinh",
     fieldRequired: "Trường này không được để trống",
+    chooseDate: "Chọn ngày",
+    chooseTime: "Chọn giờ",
   },
   screens: {
     home: "Trang chủ",
@@ -101,6 +103,14 @@ export const vn = {
     name: "Tên tài liệu",
     description: "Mô tả",
     url: "Đường dẫn",
+  },
+  manageAssignment: {
+    name: "Tên bài tập",
+    note: "Ghi chú",
+    url: "Đường dẫn",
+    dueDate: "Hạn nộp",
+    chooseDueDate: "Chọn hạn nộp",
+    submit: "Nộp bài",
   },
   home: {
     classList: "Danh sách lớp học",

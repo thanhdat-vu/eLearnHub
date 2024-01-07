@@ -35,7 +35,7 @@ export const DateTimeInput = ({
         onPress={() => setShowDatePicker(true)}
         variant="outline"
       >
-        {value || i88n.form.chooseDateOfBirth}
+        {value || (isTimeMode ? i88n.form.chooseDate : i88n.form.chooseTime)}
       </Button>
       {showDatePicker && (
         <DateTimePicker

@@ -1,7 +1,7 @@
 export interface ResourceItem {
   id?: string;
   name: string;
-  description: string;
+  description?: string;
   url: string;
   classIds: string[];
 }
