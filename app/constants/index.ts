@@ -8,6 +8,7 @@ export const SCREENS = {
   SETTINGS: "Settings",
   ACCOUNT: "Account",
   CREATE_CLASS: "CreateClass",
+  CLASS_DETAILS: "ClassDetails",
 };
 
 export const ROLES = {

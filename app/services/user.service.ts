@@ -16,6 +16,16 @@ export const userService = {
     return user.data() as User;
   },
 
+  getUserByIds: async (userIds: string[]) => {
+    try {
+      const q = query(collection(db, "users"), where("id", "in", userIds));
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.docs.map((doc) => doc.data());
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
   getUserByRole: async (role: string) => {
     try {
       const q = query(collection(db, "users"), where("role", "==", role));

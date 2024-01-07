@@ -76,9 +76,9 @@ export const authService = {
       );
       const user = userCredential.user;
       const authToken = await user.getIdToken();
-      authStore.setAuthToken(authToken);
       const userInfo = await userService.getUser(user.uid);
       authStore.setUser(userInfo);
+      authStore.setAuthToken(authToken);
     } catch (error) {
       const errorCode = (error as FirebaseError).code;
       const customError = authService.getFirebaseErrorMessages(errorCode);
@@ -96,9 +96,9 @@ export const authService = {
       const user = userCredential.user;
       await setDoc(doc(db, "users", user.uid), signUpInfo);
       const authToken = await user.getIdToken();
-      authStore.setAuthToken(authToken);
       const userInfo = await userService.getUser(user.uid);
       authStore.setUser({ ...userInfo, id: user.uid });
+      authStore.setAuthToken(authToken);
     } catch (error) {
       const errorCode = (error as FirebaseError).code;
       const customError = authService.getFirebaseErrorMessages(errorCode);

@@ -1,5 +1,9 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AccountScreen, CreateClassScreen } from "@/screens";
+import {
+  AccountScreen,
+  CreateClassScreen,
+  ClassDetailsScreen,
+} from "@/screens";
 import { SCREENS } from "@/constants";
 import { BottomNavigator } from "./BottomNavigator";
 import { i88n } from "@/i18n";
@@ -29,6 +33,15 @@ export const AppStack = () => {
           headerShown: true,
           headerTitle: i88n.screens.createClass,
         }}
+      />
+      <Stack.Screen
+        name={SCREENS.CLASS_DETAILS}
+        component={ClassDetailsScreen}
+        options={({ route }) => ({
+          headerShown: true,
+          // @ts-ignore
+          headerTitle: route.params?.classInfo?.name,
+        })}
       />
     </Stack.Navigator>
   );

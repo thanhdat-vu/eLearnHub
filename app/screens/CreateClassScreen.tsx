@@ -1,4 +1,4 @@
-import { DateTimeInput } from "@/components";
+import { DateTimeInput, MessageModal } from "@/components";
 import { i88n } from "@/i18n";
 import { Class } from "@/models/Class";
 import {
@@ -17,9 +17,11 @@ import { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { User } from "@/stores/UserStore";
 import { userService } from "@/services/user.service";
-import { ROLES } from "@/constants";
+import { ROLES, SCREENS } from "@/constants";
 import { classService } from "@/services/class.service";
 import { validation } from "@/utils/validation";
+import { useStores } from "@/stores";
+import { useNavigation } from "@react-navigation/native";
 
 interface FormError extends Class {
   assistant: string;
@@ -27,11 +29,17 @@ interface FormError extends Class {
 }
 
 export const CreateClassScreen = () => {
+  const { navigate } = useNavigation();
+
+  const { authStore } = useStores();
+
   const [classInfo, setClassInfo] = useState<Class>({} as Class);
 
   const [formError, setFormError] = useState<FormError>({} as FormError);
 
   const [loading, setLoading] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
 
   const [allAssistant, setAllAssistant] = useState<User[]>([]);
   useEffect(() => {
@@ -42,7 +50,6 @@ export const CreateClassScreen = () => {
 
   const handleCreateClass = async () => {
     const currentFormError: FormError = {
-      teacherId: "",
       name: validation.checkRequired(classInfo.name),
       description: "",
       startDate: validation.checkRequired(classInfo.startDate),
@@ -54,7 +61,6 @@ export const CreateClassScreen = () => {
     };
     for (const key in currentFormError) {
       if (currentFormError[key as keyof FormError]) {
-        console.log(currentFormError);
         setFormError(currentFormError);
         return;
       }
@@ -62,7 +68,16 @@ export const CreateClassScreen = () => {
 
     try {
       setLoading(true);
-      await classService.createClass(classInfo);
+      await classService
+        .createClass({
+          ...classInfo,
+          teacherIds: [authStore.user?.id as string],
+        })
+        .then(() => {
+          setClassInfo({} as Class);
+          setFormError({} as FormError);
+          setShowModal(true);
+        });
     } catch (error) {
       console.log(error);
     } finally {
@@ -216,6 +231,13 @@ export const CreateClassScreen = () => {
           </FormControl>
         </Column>
       </Box>
+      <MessageModal
+        isOpen={showModal}
+        onClose={() => navigate(SCREENS.HOME as never)}
+        title={i88n.common.success}
+        message={i88n.manageClass.createSuccess}
+        primaryButtonLabel={i88n.common.backToHome}
+      />
     </ScrollView>
   );
 };

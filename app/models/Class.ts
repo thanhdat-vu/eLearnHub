@@ -2,7 +2,7 @@ export interface Class {
   id?: string;
   name: string;
   description?: string;
-  teacherId: string;
+  teacherIds?: string[];
   assistantIds?: string[];
   learnerIds?: string[];
   createdAt?: string;

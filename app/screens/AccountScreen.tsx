@@ -1,4 +1,4 @@
-import { User } from "@/models/User";
+import { User } from "@/stores/UserStore";
 import { userService } from "@/services/user.service";
 import { useStores } from "@/stores";
 import { Column, Heading, ScrollView, Text, Link, Row } from "native-base";

@@ -38,4 +38,20 @@ export const classService = {
       console.log(error);
     }
   },
+  getClassByRole: async (userId: string, role: string) => {
+    try {
+      const q = query(
+        collection(db, "classes"),
+        where(`${role}Ids`, "array-contains", userId)
+      );
+      const querySnapshot = await getDocs(q);
+      const classes: Class[] = [];
+      querySnapshot.forEach((doc) => {
+        classes.push(doc.data() as Class);
+      });
+      return classes;
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };

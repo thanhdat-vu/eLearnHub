@@ -49,10 +49,18 @@ export const vn = {
     notifications: "Thông báo",
     settings: "Cài đặt",
     createClass: "Tạo lớp học",
+    classDetails: "Chi tiết lớp học",
+    details: "Chi tiết",
+    resources: "Tài liệu",
+    assignments: "Bài tập",
+    members: "Thành viên",
   },
   common: {
     continue: "Tiếp tục",
     success: "Thành công",
+    cancel: "Hủy",
+    confirm: "Xác nhận",
+    backToHome: "Quay lại trang chủ",
   },
   settings: {
     signOut: "Đăng xuất",
@@ -84,5 +92,22 @@ export const vn = {
     chooseStartTime: "Chọn giờ bắt đầu",
     chooseEndTime: "Chọn giờ kết thúc",
     chooseAssistant: "Chọn trợ giảng",
+    createSuccess: "Tạo lớp học thành công!",
+  },
+  home: {
+    classList: "Danh sách lớp học",
+  },
+  datetime: {
+    daysOfWeek: {
+      0: "Chủ nhật",
+      1: "Thứ hai",
+      2: "Thứ ba",
+      3: "Thứ tư",
+      4: "Thứ năm",
+      5: "Thứ sáu",
+      6: "Thứ bảy",
+    },
+    today: "Hôm nay",
+    tomorrow: "Ngày mai",
   },
 };

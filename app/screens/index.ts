@@ -9,3 +9,4 @@ export * from "./SettingScreen";
 
 export * from "./AccountScreen";
 export * from "./CreateClassScreen";
+export * from "./ClassDetailsScreen";

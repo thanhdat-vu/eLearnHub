@@ -6,6 +6,8 @@ interface MessageModalProps {
   onClose?: () => void;
   title: string;
   message: string;
+  primaryButtonLabel?: string;
+  primaryButtonColorScheme?: string;
 }
 
 export const MessageModal = ({
@@ -13,6 +15,8 @@ export const MessageModal = ({
   onClose,
   title,
   message,
+  primaryButtonLabel,
+  primaryButtonColorScheme,
 }: MessageModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -25,8 +29,12 @@ export const MessageModal = ({
               <Text width="full" textAlign="justify">
                 {message}
               </Text>
-              <Button width="full" colorScheme="success" onPress={onClose}>
-                {i88n.common.continue}
+              <Button
+                colorScheme={primaryButtonColorScheme || "success"}
+                width="full"
+                onPress={onClose}
+              >
+                {primaryButtonLabel || i88n.common.continue}
               </Button>
             </Column>
           </ScrollView>
