@@ -6,6 +6,8 @@ import {
   Icon,
   ScrollView,
   Text,
+  Center,
+  Spinner,
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -29,6 +31,7 @@ export const HomeScreen = () => {
     navigation.navigate(SCREENS.CREATE_CLASS);
   };
 
+  const [loading, setLoading] = useState(true);
   const [classes, setClasses] = useState<Class[]>([] as Class[]);
   useEffect(() => {
     try {
@@ -39,9 +42,11 @@ export const HomeScreen = () => {
         )
         .then((res) => {
           setClasses(res as Class[]);
+          setLoading(false);
         });
     } catch (error) {
       console.log(error);
+    } finally {
     }
   }, []);
 
@@ -53,9 +58,19 @@ export const HomeScreen = () => {
             {i88n.home.classList}
           </Heading>
           <Column space="4">
-            {classes?.map((classInfo) => (
-              <ClassCard key={classInfo.id} classInfo={classInfo} />
-            ))}
+            {loading ? (
+              <Center>
+                <Spinner />
+              </Center>
+            ) : classes.length ? (
+              classes.map((classInfo) => (
+                <ClassCard key={classInfo.id} classInfo={classInfo} />
+              ))
+            ) : (
+              <Text color="coolGray.500" fontStyle="italic">
+                {i88n.home.noClass}
+              </Text>
+            )}
           </Column>
         </Column>
       </ScrollView>

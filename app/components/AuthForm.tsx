@@ -89,8 +89,7 @@ export const AuthForm = ({ isSignUp = false }) => {
     }
     try {
       setLoading(true);
-      const signUpInfo: User = {
-        id: "",
+      const signUpInfo: Partial<User> = {
         email: form.email,
         password: form.password,
         fullName: form.fullName,

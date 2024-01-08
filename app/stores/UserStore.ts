@@ -1,4 +1,4 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree";
+import { Instance, types } from "mobx-state-tree";
 
 export const UserStore = types
   .model({

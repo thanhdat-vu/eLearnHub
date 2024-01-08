@@ -114,6 +114,7 @@ export const vn = {
   },
   home: {
     classList: "Danh sách lớp học",
+    noClass: "Bạn chưa có lớp học nào",
   },
   datetime: {
     daysOfWeek: {

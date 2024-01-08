@@ -7,6 +7,7 @@ import {
   getDocs,
   query,
   where,
+  documentId,
 } from "firebase/firestore";
 
 export const userService = {
@@ -18,7 +19,10 @@ export const userService = {
 
   getUserByIds: async (userIds: string[]) => {
     try {
-      const q = query(collection(db, "users"), where("id", "in", userIds));
+      const q = query(
+        collection(db, "users"),
+        where(documentId(), "in", userIds)
+      );
       const querySnapshot = await getDocs(q);
       return querySnapshot.docs.map((doc) => doc.data());
     } catch (error) {

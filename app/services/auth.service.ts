@@ -77,7 +77,7 @@ export const authService = {
       const user = userCredential.user;
       const authToken = await user.getIdToken();
       const userInfo = await userService.getUser(user.uid);
-      authStore.setUser(userInfo);
+      authStore.setUser({ ...userInfo, id: user.uid });
       authStore.setAuthToken(authToken);
     } catch (error) {
       const errorCode = (error as FirebaseError).code;

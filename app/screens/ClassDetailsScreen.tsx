@@ -491,6 +491,7 @@ export const FourthRoute = ({ route }: any) => {
         )}
         {classAssignments.map((assignment, i) => (
           <Box
+            key={i}
             bg="white"
             borderWidth="1"
             borderColor="coolGray.200"
@@ -502,6 +503,12 @@ export const FourthRoute = ({ route }: any) => {
                   {assignment.name}
                 </Heading>
                 <Text>{assignment.note}</Text>
+                <Row alignItems="center" space="1">
+                  <Icon as={MaterialCommunityIcons} name="clock-outline" />
+                  <Text color="coolGray.500">
+                    {i88n.manageAssignment.dueDate}: {assignment.dueDate}
+                  </Text>
+                </Row>
               </Column>
               <Column justifyContent="center" p="2">
                 <Button
