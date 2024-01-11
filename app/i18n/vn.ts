@@ -98,6 +98,8 @@ export const vn = {
     createSuccess: "Tạo lớp học thành công!",
     addResource: "Thêm tài liệu",
     addAssignment: "Thêm bài tập",
+    attendanceInfo: "Thông tin điểm danh",
+    addMember: "Thêm thành viên",
   },
   manageResource: {
     name: "Tên tài liệu",

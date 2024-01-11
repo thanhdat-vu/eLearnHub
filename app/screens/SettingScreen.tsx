@@ -20,8 +20,9 @@ export const SettingScreen = () => {
       id: 0,
       iconName: "account",
       text: i88n.settings.account,
-      // @ts-ignore
-      onPress: () => navigation.navigate(SCREENS.ACCOUNT),
+      onPress: () =>
+        // @ts-ignore
+        navigation.navigate(SCREENS.ACCOUNT, { userInfo: authStore.user }),
     },
     {
       id: 1,

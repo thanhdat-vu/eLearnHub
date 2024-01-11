@@ -2,6 +2,7 @@ import { i88n } from "@/i18n";
 import { Class } from "@/models/Class";
 import { userService } from "@/services/user.service";
 import {
+  Avatar,
   Box,
   Button,
   Column,
@@ -11,7 +12,6 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
-  Link,
   Modal,
   Row,
   ScrollView,
@@ -24,24 +24,26 @@ import { useEffect, useState } from "react";
 import { TabView, TabBar } from "react-native-tab-view";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useStores } from "@/stores";
-import { ROLES } from "@/constants";
+import { ROLES, SCREENS } from "@/constants";
 import { ResourceItem } from "@/models/ResourceItem";
 import { validation } from "@/utils/validation";
 import { resourceService } from "@/services/resource.service";
 import { DateTimeInput, ResourceItemBlock } from "@/components";
 import { Assignment } from "@/models/Assignment";
 import { assignmentService } from "@/services/assignment.service";
+import { User } from "@/stores/UserStore";
+import { Link } from "@react-navigation/native";
 import { Linking } from "react-native";
 
 const FirstRoute = ({ route }: any) => {
   const classInfo: Class = route.params.classInfo;
-  const [teachers, setTeachers] = useState<string[]>([]);
-  const [assistants, setAssistants] = useState<string[]>([]);
+  const [teachers, setTeachers] = useState<User[]>([]);
+  const [assistants, setAssistants] = useState<User[]>([]);
   useEffect(() => {
     if (classInfo.teacherIds?.length) {
       userService.getUserByIds(classInfo.teacherIds as string[]).then((res) => {
         if (res) {
-          setTeachers(res.map((user) => user.fullName));
+          setTeachers(res as User[]);
         }
       });
     }
@@ -50,7 +52,7 @@ const FirstRoute = ({ route }: any) => {
         .getUserByIds(classInfo.assistantIds as string[])
         .then((res) => {
           if (res) {
-            setAssistants(res.map((user) => user.fullName));
+            setAssistants(res as User[]);
           }
         });
     }
@@ -73,22 +75,93 @@ const FirstRoute = ({ route }: any) => {
         <Text>{classInfo.endTime}</Text>
         <Text color="coolGray.500">{i88n.manageClass.teacher}</Text>
         {teachers.map((teacher, i) => (
-          <Text key={i}>{teacher}</Text>
+          <Link
+            key={i}
+            // @ts-ignore
+            to={{ screen: SCREENS.ACCOUNT, params: { userInfo: teacher } }}
+          >
+            <Text color="primary.500">{teacher.fullName}</Text>
+          </Link>
         ))}
         <Text color="coolGray.500">{i88n.manageClass.assistant}</Text>
         {assistants.map((assistant, i) => (
-          <Text key={i}>{assistant}</Text>
+          <Link
+            key={i}
+            // @ts-ignore
+            to={{ screen: SCREENS.ACCOUNT, params: { userInfo: assistant } }}
+          >
+            <Text color="primary.500">{assistant.fullName}</Text>
+          </Link>
         ))}
       </Column>
     </ScrollView>
   );
 };
 
-const SecondRoute = ({ route }: any) => (
-  <ScrollView background="white">
-    <Column p="5" space="2"></Column>
-  </ScrollView>
-);
+const SecondRoute = ({ route }: any) => {
+  const classInfo: Class = route.params.classInfo;
+  const { authStore } = useStores();
+
+  const [learners, setLearners] = useState<User[]>([]);
+  useEffect(() => {
+    if (classInfo.learnerIds?.length) {
+      userService.getUserByIds(classInfo.learnerIds as string[]).then((res) => {
+        if (res) {
+          setLearners(res as User[]);
+        }
+      });
+    }
+  }, []);
+
+  return (
+    <ScrollView background="white">
+      <Column p="5" space="2">
+        {authStore.user?.role === ROLES.TEACHER && (
+          <>
+            <Button colorScheme="primary" variant="outline">
+              {i88n.manageClass.attendanceInfo}
+            </Button>
+            <Button
+              colorScheme="primary"
+              variant="outline"
+              leftIcon={
+                <Icon as={MaterialCommunityIcons} name="plus" size={5} />
+              }
+            >
+              {i88n.manageClass.addMember}
+            </Button>
+          </>
+        )}
+        {learners.map((learner, i) => (
+          <Row
+            key={i}
+            p="2"
+            alignItems="center"
+            space="2"
+            borderBottomWidth="1"
+            borderBottomColor="coolGray.200"
+          >
+            <Text color="coolGray.500">{i + 1}.</Text>
+            <Row space="2">
+              <Avatar bg="gray.200">
+                <Text color="coolGray.800">{(learner.fullName || "?")[0]}</Text>
+              </Avatar>
+            </Row>
+            <Column>
+              <Link
+                // @ts-ignore
+                to={{ screen: SCREENS.ACCOUNT, params: { userInfo: learner } }}
+              >
+                <Text color="primary.500">{learner.fullName}</Text>
+              </Link>
+              <Text color="coolGray.500">{learner.memberId}</Text>
+            </Column>
+          </Row>
+        ))}
+      </Column>
+    </ScrollView>
+  );
+};
 
 interface ResourceFormError extends Partial<ResourceItem> {}
 

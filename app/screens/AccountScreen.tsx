@@ -1,21 +1,9 @@
 import { User } from "@/stores/UserStore";
-import { userService } from "@/services/user.service";
-import { useStores } from "@/stores";
 import { Column, Heading, ScrollView, Text, Link, Row } from "native-base";
-import { useEffect, useState } from "react";
 import { i88n } from "@/i18n";
 
-export const AccountScreen = () => {
-  const { authStore } = useStores();
-
-  const [userInfo, setUserInfo] = useState<User>();
-  useEffect(() => {
-    const userId = authStore.getUserId;
-    if (!userId) return;
-    userService.getUser(userId).then((user) => {
-      setUserInfo(user as User);
-    });
-  }, []);
+export const AccountScreen = ({ route }: any) => {
+  const userInfo: User = route.params?.userInfo;
 
   return (
     <ScrollView background="white" p="5">

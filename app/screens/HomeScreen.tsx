@@ -34,21 +34,23 @@ export const HomeScreen = () => {
   const [loading, setLoading] = useState(true);
   const [classes, setClasses] = useState<Class[]>([] as Class[]);
   useEffect(() => {
-    try {
-      classService
-        .getClassByRole(
-          authStore.user?.id as string,
-          authStore.user?.role as string
-        )
-        .then((res) => {
-          setClasses(res as Class[]);
-          setLoading(false);
-        });
-    } catch (error) {
-      console.log(error);
-    } finally {
-    }
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      try {
+        classService
+          .getClassByRole(
+            authStore.user?.id as string,
+            authStore.user?.role as string
+          )
+          .then((res) => {
+            setClasses(res as Class[]);
+            setLoading(false);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <>
